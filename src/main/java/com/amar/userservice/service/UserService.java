@@ -1,5 +1,6 @@
 package com.amar.userservice.service;
 
+import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 
 import java.util.List;
@@ -15,4 +16,10 @@ public interface UserService {
     User updateUser(Long id, User user);
 
     String deleteUser(Long id);
+
+    User signup(String email, String fullName, String password);
+
+    Token login(String email, String password);
+
+    void logout(String token);
 }

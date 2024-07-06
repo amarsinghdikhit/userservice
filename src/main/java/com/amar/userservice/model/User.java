@@ -1,64 +1,26 @@
 package com.amar.userservice.model;
 
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 public class User extends BaseModel{
 
+    private String name;
+
     private String email;
 
     private String username;
     
-    private String password;
+    private String hashedPassword;
 
-    @Embedded
-    private Name name;
+    @ManyToMany
+    private List<Role> roles;
 
-    @Embedded
-    private Address address;
-
-    private String phone;
-}
-
-@Embeddable
-@Getter
-@Setter
-class Name {
-
-    private String firstname;
-
-    private String lastname;
-}
-
-@Embeddable
-@Getter
-@Setter
-class Address {
-
-    private String city;
-
-    private String street;
-
-    private int number;
-
-    private String zipcode;
-
-    @Embedded
-    private Geolocation geolocation;
-}
-
-@Embeddable
-@Getter
-@Setter
-class Geolocation {
-
-    private String lat;
-
-    private String lon;
+    private Boolean isEmailVerified;
 }

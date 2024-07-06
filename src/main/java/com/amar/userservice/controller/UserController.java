@@ -1,8 +1,11 @@
 package com.amar.userservice.controller;
 
+import com.amar.userservice.dtos.LoginRequestDto;
+import com.amar.userservice.dtos.LogoutRequestDto;
+import com.amar.userservice.dtos.SignupRequestDto;
+import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 import com.amar.userservice.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,6 @@ public class UserController {
 
     private UserService userService;
 
-    @Autowired
     UserController(UserService userService){
         this.userService = userService;
     }
@@ -44,5 +46,28 @@ public class UserController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") Long id){
         return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public Token login(@RequestBody LoginRequestDto requestDto){
+
+        return userService.login(requestDto.getEmail(), requestDto.getPassword());
+    }
+
+
+    @PostMapping("/signup")
+    public User signup(@RequestBody SignupRequestDto requestDto){
+        String email = requestDto.getEmail();
+        String password = requestDto.getPassword();
+        String name = requestDto.getName();
+
+        return userService.signup(email, name, password);
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LogoutRequestDto requestDto){
+        userService.logout(requestDto.getToken());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
