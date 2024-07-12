@@ -22,4 +22,6 @@ public interface UserService {
     Token login(String email, String password);
 
     void logout(String token);
+
+    User validateToken(String token);
 }

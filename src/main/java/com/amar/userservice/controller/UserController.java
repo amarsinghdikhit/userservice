@@ -6,6 +6,7 @@ import com.amar.userservice.dtos.SignupRequestDto;
 import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 import com.amar.userservice.service.UserService;
+import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +70,10 @@ public class UserController {
     public ResponseEntity<Void> logout(@RequestBody LogoutRequestDto requestDto){
         userService.logout(requestDto.getToken());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/validate/{token}")
+    public User validateToken(@PathVariable @NonNull String token){
+        return userService.validateToken(token);
     }
 }

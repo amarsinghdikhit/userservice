@@ -117,4 +117,14 @@ public class UserServiceImpl implements UserService{
          token1.setDeleted(true);
          tokenRepository.save(token1);
     }
+
+    @Override
+    public User validateToken(String token) {
+        Optional<Token> optionalToken = tokenRepository.findByValueAndIsDeletedAndExpiryAtIsAfter(token, false, new java.sql.Date(System.currentTimeMillis()));
+        if(optionalToken.isEmpty()){
+            return null;
+        }
+
+        return optionalToken.get().getUser();
+    }
 }
