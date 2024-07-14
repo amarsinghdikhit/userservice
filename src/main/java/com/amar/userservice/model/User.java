@@ -19,7 +19,7 @@ public class User extends BaseModel{
     
     private String hashedPassword;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
     private Boolean isEmailVerified;

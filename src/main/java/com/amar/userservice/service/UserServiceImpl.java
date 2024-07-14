@@ -1,5 +1,6 @@
 package com.amar.userservice.service;
 
+import com.amar.userservice.dtos.SignupResponseDto;
 import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 import com.amar.userservice.repository.TokenRepository;
@@ -72,12 +73,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User signup(String email, String fullName, String password) {
+    public SignupResponseDto signup(String email, String fullName, String password) {
         User user = new User();
         user.setName(fullName);
         user.setEmail(email);
         user.setHashedPassword(bCryptPasswordEncoder.encode(password));
-        return userRepository.save(user);
+        user.setIsEmailVerified(true);
+        user = userRepository.save(user);
+        return new SignupResponseDto(user.getName(), user.getEmail(), user.getRoles(), user.getIsEmailVerified());
     }
 
     @Override

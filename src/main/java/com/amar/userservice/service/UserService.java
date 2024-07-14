@@ -1,5 +1,6 @@
 package com.amar.userservice.service;
 
+import com.amar.userservice.dtos.SignupResponseDto;
 import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 
@@ -17,7 +18,7 @@ public interface UserService {
 
     String deleteUser(Long id);
 
-    User signup(String email, String fullName, String password);
+    SignupResponseDto signup(String email, String fullName, String password);
 
     Token login(String email, String password);
 

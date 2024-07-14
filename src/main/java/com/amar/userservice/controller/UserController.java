@@ -3,6 +3,7 @@ package com.amar.userservice.controller;
 import com.amar.userservice.dtos.LoginRequestDto;
 import com.amar.userservice.dtos.LogoutRequestDto;
 import com.amar.userservice.dtos.SignupRequestDto;
+import com.amar.userservice.dtos.SignupResponseDto;
 import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 import com.amar.userservice.service.UserService;
@@ -57,7 +58,7 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public User signup(@RequestBody SignupRequestDto requestDto){
+    public SignupResponseDto signup(@RequestBody SignupRequestDto requestDto){
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
         String name = requestDto.getName();
