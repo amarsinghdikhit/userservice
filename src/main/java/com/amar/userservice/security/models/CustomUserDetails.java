@@ -27,6 +27,16 @@ public class CustomUserDetails implements UserDetails {
 
     private boolean enabled;
 
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public CustomUserDetails(){}
 
     public CustomUserDetails(User user) {
@@ -36,6 +46,7 @@ public class CustomUserDetails implements UserDetails {
         this.accountNonLocked = true;
         this.credentialsNonExpired = true;
         this.enabled = true;
+        this.userId = user.getId();
         List<CustomGrantedAuthority> grantedAuthorities = new ArrayList<>();
         for(Role role : user.getRoles()){
             grantedAuthorities.add(new CustomGrantedAuthority(role));
