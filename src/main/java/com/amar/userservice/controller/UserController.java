@@ -7,6 +7,7 @@ import com.amar.userservice.dtos.SignupResponseDto;
 import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 import com.amar.userservice.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +59,7 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public SignupResponseDto signup(@RequestBody SignupRequestDto requestDto){
+    public SignupResponseDto signup(@RequestBody SignupRequestDto requestDto) throws JsonProcessingException {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
         String name = requestDto.getName();

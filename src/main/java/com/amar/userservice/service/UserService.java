@@ -3,6 +3,7 @@ package com.amar.userservice.service;
 import com.amar.userservice.dtos.SignupResponseDto;
 import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface UserService {
 
     String deleteUser(Long id);
 
-    SignupResponseDto signup(String email, String fullName, String password);
+    SignupResponseDto signup(String email, String fullName, String password) throws JsonProcessingException;
 
     Token login(String email, String password);
 

@@ -1,12 +1,16 @@
 package com.amar.userservice.service;
 
+import com.amar.userservice.dtos.SendEmailEventDto;
 import com.amar.userservice.dtos.SignupResponseDto;
 import com.amar.userservice.model.Token;
 import com.amar.userservice.model.User;
 import com.amar.userservice.repository.TokenRepository;
 import com.amar.userservice.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +30,18 @@ public class UserServiceImpl implements UserService{
 
     private TokenRepository tokenRepository;
 
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    private ObjectMapper objectMapper;
+
     @Autowired
-    UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenRepository tokenRepository){
+    UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenRepository tokenRepository,
+                    KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper){
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.tokenRepository = tokenRepository;
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -73,13 +84,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public SignupResponseDto signup(String email, String fullName, String password) {
+    public SignupResponseDto signup(String email, String fullName, String password) throws JsonProcessingException {
         User user = new User();
         user.setName(fullName);
         user.setEmail(email);
         user.setHashedPassword(bCryptPasswordEncoder.encode(password));
         user.setIsEmailVerified(true);
         user = userRepository.save(user);
+
+        SendEmailEventDto emailEventDto = new SendEmailEventDto();
+        emailEventDto.setTo(user.getEmail());
+        emailEventDto.setFrom("amar@scaler.com");
+        emailEventDto.setSubject("Welcome to signup code");
+        emailEventDto.setBody("You have been signed up, You can start using our services");
+
+        kafkaTemplate.send("SEND_EMAIL", objectMapper.writeValueAsString(emailEventDto));
         return new SignupResponseDto(user.getName(), user.getEmail(), user.getRoles(), user.getIsEmailVerified());
     }
 
